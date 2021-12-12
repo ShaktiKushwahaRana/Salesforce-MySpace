@@ -1,0 +1,1412 @@
+
+WEDNESDAY, OCT 13
+Shakti Rana
+,
+Oct 13, 1:21 PM
+,
+trigger updateNosOfContacts2 on Contact (after insert,after delete) {
+set<id>newCon=new set<id>();
+ 
+//set<contact>newContact=new set<Contact>();
+List<Account> l1=new List<Account>();
+
+if(trigger.isInsert){
+for(Contact cc: trigger.new)
+{    
+    newCon.add(cc.AccountId);
+//newCont.add(cc);
+}
+}
+if(trigger.isdelete){
+for(Contact cc: trigger.old)
+{    
+    newCon.add(cc.AccountId);
+}}
+
+
+
+Map<id,List<contact>>myMap=new map<id,List<contact>>();
+
+//Iterate through the list and check whether it is in map or not
+
+//System.debug(newCon);
+
+for(contact cc : [Select accountId,Name from contact where AccountId in : newCon])
+{  // system.debug(cc);
+    if(myMap.containsKey(cc.AccountId))
+    {
+       // myMap.put(cc.AccountId,myMap.get(cc.AccountId)+1);
+       List<contact>newList=myMap.get(cc.AccountId);
+       newList.add(cc);
+       myMap.put(cc.AccountId,newList);
+    }
+    else
+    {//myMap.put(cc.AccountId,1);
+    
+    myMap.put(cc.AccountId,new List<contact>{cc});
+    }
+}
+
+for(id idd :newCon)
+{    // system.debug('Hi');
+   Account acc=new Account();
+   acc.id=idd;
+  // acc.Number__c=myMap.get(idd);
+ if(!myMap.isEmpty())
+ { acc.Number__c=(myMap.get(idd)).size();
+ }
+ else
+ {
+ acc.Number__c=0;
+ }
+   l1.add(acc);
+   
+   
+   // idd.Number__c=myMap.get(idd);
+
+}
+//Update siblings
+
+
+
+if(l1.size()>0)
+{
+update l1;
+}
+
+for(id idd: myMap.keySet()){
+System.debug('Key'+' '+idd);
+System.debug('Value'+' '+myMap.get(idd));
+
+}
+List<Contact>updatedContact=new List<Contact>();
+
+for( Contact idd:[SELECT id,AccountId, Name from Contact WHERE AccountId in : myMap.keySet()])
+{   // System.debug('hi');
+   
+    Integer size1=(myMap.get(idd.AccountId)).size();
+    //System.debug(myMap.keySet());
+    //System.debug(size1);
+      idd.Siblings__c=size1-1;
+        updatedContact.add(idd);
+    
+
+}
+update updatedContact;
+}
+,Oct 13, 1:21 PM,
+using only one for loop
+,Oct 13, 1:21 PM,
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+,Oct 13, 1:21 PM,
+SUNDAY, OCT 17
+Shakti Rana
+,
+Oct 17, 5:12 PM
+,
+Q: How to use  Image withn blob DS
+,Oct 17, 5:12 PM,
+SUNDAY, OCT 24
+Shakti Rana
+,
+Oct 24, 12:45 PM
+,
+image.png
+,Oct 24, 12:45 PM,
+MONDAY, OCT 25
+Shakti Rana
+,
+Oct 25, 10:55 AM
+,
+// Calling external api from salesforce platform
+public class MyApiClass{
+    
+    
+    public static void mymethod1()
+    {
+        
+        HTTP h=new HTTP();
+        HTTPRequest req=new HTTPRequest();
+        req.setEndpoint('https://catfact.ninja/fact');
+        req.setMethod('GET');
+        HTTPResponse res=h.send(req);
+        Map<String, Object> jsonBody=(Map<String, Object>)JSON.deserializeUntyped(res.getBody());
+        
+       system.debug(jsonBody);
+    }
+
+}
+,Oct 25, 10:55 AM,
+Shakti Rana
+,
+Oct 25, 4:35 PM
+,
+https://playful-otter-ql2v5s-dev-ed.my.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG9fe4g9fhX0E4Wh5nLWGAqi7.Oq65OhyGXMW.3Ig6KlmwLciskVD8V.VtxTLsw6MST9c8ybvbRXlLwAmGJ&client_secret=B050A925950BBBB4F3FCAA2B91AE00F88F4C6C120BEB24AF8294491CAD4B3B77
+&username=shakti.rana@grazitti.com&password=Shakti@123sEkw5zjtXrp5EZq6tssFdmqA
+,Oct 25, 4:35 PM,
+SATURDAY, OCT 30
+Shakti Rana
+,
+Oct 30, 10:14 PM
+,
+https://playful-otter-ql2v5s-dev-ed.lightning.force.com/services/oauth2/token?grant_type=password&client_id=3MVG9fe4g9fhX0E4Wh5nLWGAqi5HqhyFRNBO_QvwOae.ZJD9.b6CQ0hpREV8NmLML2lr8F836N_OFe19ry4Sa&client_secret=556475EB61B6DE3629CC35C6ABED0A3E892D24C1114B7208E9952831D38F4F3D
+&username=shakti.rana@grazitti.com&password=Today@1234qcG0AmeaPga4Zd4MLmF2yIfM
+,Oct 30, 10:14 PM,
+image.png
+,Oct 30, 10:16 PM,
+SUNDAY, OCT 31
+Shakti Rana
+,
+Oct 31, 6:15 PM
+,
+password changed for sfdc id Shallu@123
+,Oct 31, 6:15 PM,
+MONDAY, NOV 1
+Shakti Rana
+,
+Nov 1, 2:03 PM
+,
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dev_guide.htm
+,Nov 1, 2:03 PM,
+https://www.iterativelogic.com/salesforce-apex-trigger-best-practices/
+
+,Nov 1, 2:03 PM,
+Shakti Rana
+,
+Nov 1, 2:31 PM
+,
+image.png
+,Nov 1, 2:31 PM,
+Shakti Rana
+,
+Nov 1, 3:32 PM
+,
+image.png
+,Nov 1, 3:32 PM,
+Shakti Rana
+,
+Nov 1, 4:51 PM
+,
+Note in asynchronous apex jobs in ques are stored in persistent storage(which retain data post power off) for failure recovery
+
+,Nov 1, 4:51 PM,
+Shakti Rana
+,
+Nov 1, 5:27 PM
+,
+image.png
+,Nov 1, 5:27 PM,
+TUESDAY, NOV 2
+Shakti Rana
+,
+Nov 2, 1:17 PM
+,
+In test class record s rae not created only scope of them is till the execution of the test.
+image.png
+,Nov 2, 1:17 PM,
+Shakti Rana
+,
+Nov 2, 1:31 PM
+,
+consider situation : api callout  code in future method but rest method use it then how symmetry maintain in them
+,Nov 2, 1:31 PM,
+Shakti Rana
+,
+Nov 2, 1:34 PM
+,
+Mixed DML operation.
+,Nov 2, 1:34 PM,
+Shakti Rana
+,
+Nov 2, 2:13 PM
+,
+Why queueable apex take member variables of non primitive type, what if when running the value of variables are changed ?
+,Nov 2, 2:13 PM,
+WEDNESDAY, NOV 3
+Shakti Rana
+,
+Nov 3, 4:03 PM
+,
+update ke case me  test kese likhenge
+,Nov 3, 4:03 PM,
+MONDAY, NOV 8
+Shakti Rana
+,
+Nov 8, 4:06 PM
+,
+how to print exact number of contact records
+,Nov 8, 4:06 PM,
+SELECT Name ,(Select Name from contacts) from Account
+,Nov 8, 4:07 PM,
+Shakti Rana
+,
+Nov 8, 4:47 PM
+,
+image.png
+,Nov 8, 4:47 PM,
+Shakti Rana
+,
+Nov 8, 4:50 PM
+,
+https://www.tutorialspoint.com/java/java_abstraction.htm#:~:text=Abstract%20Class&text=If%20a%20class%20is%20declared,the%20abstract%20methods%20in%20it.
+Java - Abstraction
+Java - Abstraction
+www.tutorialspoint.com
+,Nov 8, 4:50 PM,
+https://www.geeksforgeeks.org/implement-interface-using-abstract-class-in-java/
+Implement Interface using Abstract Class in Java - GeeksforGeeks
+Implement Interface using Abstract Class in Java - GeeksforGeeks
+www.geeksforgeeks.org
+,Nov 8, 4:51 PM,
+image.png
+,Nov 8, 4:52 PM,
+https://www.google.com/search?q=is+it+mandatory+to+define+all+methods+of+an+interface&rlz=1C1CHZN_enIN959IN959&oq=is+it+mandatory+to+define+all+methods+of+an+interface+&aqs=chrome..69i57j33i22i29i30l2.12854j0j7&sourceid=chrome&ie=UTF-8
+is it mandatory to define all methods of an interface - Google Search
+is it mandatory to define all methods of an interface - Google Search
+www.google.com
+,Nov 8, 4:52 PM,
+Shakti Rana
+,
+Nov 8, 6:11 PM
+,
+Tooling API
+,Nov 8, 6:11 PM,
+https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/intro_api_tooling.htm
+,Nov 8, 6:12 PM,
+TUESDAY, NOV 9
+Shakti Rana
+,
+Nov 9, 12:32 PM
+,
+FIND {shakti} In Name, Email_c  isme do fields ni de sakte
+,Nov 9, 12:32 PM,
+Shakti Rana
+,
+Nov 9, 4:19 PM
+,
+Data loader me record id kese ati hai in case of upsert
+,Nov 9, 4:19 PM,
+Shakti Rana
+,
+Nov 9, 5:25 PM
+,
+Another way to prevent account created with same name
+,Nov 9, 5:25 PM,
+Trigger before insert
+,Nov 9, 5:25 PM,
+how validation rule work here
+,Nov 9, 5:25 PM,
+THURSDAY, NOV 11
+Shakti Rana
+,
+Nov 11, 1:13 PM
+,
+task on before and after afdate
+,Nov 11, 1:13 PM,
+trigger.
+,Nov 11, 1:13 PM,
+Shakti Rana
+,
+Nov 11, 5:53 PM
+,
+Why roleup summary field not created on lookup relationed object
+,Nov 11, 5:53 PM,
+eg Account contact
+,Nov 11, 5:53 PM,
+Shakti Rana
+,
+Nov 11, 8:53 PM
+,
+Map<ID,List<Contact>> accRelatedConMap = new Map<ID,List<Contact>>([SELECT ID,(SELECT ID FROM Contacts) FROM Account Where ID in : accIdSet]);
+,Nov 11, 8:53 PM,
+why above lines give error
+,Nov 11, 8:53 PM,
+Shakti Rana
+,
+Nov 11, 10:18 PM
+,
+trigger RollupFieldUpdate on Contact (after insert, after update, after delete) {
+    
+    Set<ID> accIdSet = new Set<ID>();
+    if(Trigger.isInsert || Trigger.isUpdate)
+    {
+        for(Contact con : Trigger.new)
+    	{	if(con.AccountId!=null)
+    		{
+            	accIdSet.add(con.AccountId);
+        	}
+        
+    	}
+    }
+    if(Trigger.isDelete)
+    {
+        for(Contact con : Trigger.old)
+    	{	if(con.AccountId!=null)
+    		{
+            	accIdSet.add(con.AccountId);
+        	}
+        
+    	}
+    }
+    
+    
+    List<Contact> conList = [SELECT ID,AccountId,Salary__c FROM Contact WHERE AccountId IN : accIdSet];
+    Map<ID,Decimal> maxSalaryMap = new Map<ID,Decimal>();
+    for(Contact cc : conList)
+    {	//System.debug(cc.Salary__c);
+        if(maxSalaryMap.containsKey(cc.AccountId))
+        {
+            Decimal maxSalary=maxSalaryMap.get(cc.AccountId);
+            if(maxSalary < cc.Salary__c)
+            {maxSalary = cc.Salary__c;}
+             maxSalaryMap.put(cc.AccountId,maxSalary);
+        }
+        else
+        {
+            maxSalaryMap.put(cc.AccountId,cc.Salary__c);
+        }
+        
+    }
+    
+    List<Account> updateAcc=[SELECT ID FROM Account WHERE ID IN : accIdSet];
+    List<Account> upAcc=new List<Account>();
+    for(Account ap : updateAcc)
+    {	
+        if(maxSalaryMap.ContainsKey(ap.Id))
+        {
+            ap.Max_Salary__c=maxSalaryMap.get(ap.Id);
+            upAcc.add(ap);
+        }
+        else
+        {
+             ap.Max_Salary__c=0;
+            upAcc.add(ap);
+        }
+    }
+    
+    update upAcc;
+}
+,Nov 11, 10:18 PM,
+MONDAY, NOV 15
+Shakti Rana
+,
+Nov 15, 9:48 AM
+,
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+,Nov 15, 9:48 AM,
+trigger RollupFieldUpdate on Contact (after insert, after update, after delete) {
+    
+    Set<ID> accIdSet = new Set<ID>();
+    if(Trigger.isInsert || Trigger.isUpdate)
+    {
+        for(Contact con : Trigger.new)
+    	{	if(con.AccountId!=null)
+    		{
+            	accIdSet.add(con.AccountId);
+        	}
+        
+    	}
+    }
+    if(Trigger.isDelete)
+    {
+        for(Contact con : Trigger.old)
+    	{	if(con.AccountId!=null)
+    		{
+            	accIdSet.add(con.AccountId);
+        	}
+        
+    	}
+    }
+    List<Id> acId =new List<Id>();
+    for(Id accId : accIdSet)
+    {
+        acId.add(accId);
+    }
+    
+   FindMaxSalary.updateAccWithMaxSalary(acId); 
+    
+}
+,Nov 15, 9:48 AM,
+public class FindMaxSalary {
+    public static Map<ID,Decimal> getMaxSalaryMap(List<ID> accIdSet)
+    {
+       List<Contact> conList = [SELECT ID,AccountId,Salary__c FROM Contact WHERE AccountId IN : accIdSet]; 
+       Map<ID,Decimal> maxSalaryMap = new Map<ID,Decimal>(); 
+       for(Contact cc : conList)
+    	{	
+        if(maxSalaryMap.containsKey(cc.AccountId))
+        {
+            Decimal maxSalary=maxSalaryMap.get(cc.AccountId);
+            if(maxSalary < cc.Salary__c)
+            {
+                maxSalary = cc.Salary__c;
+            }
+             maxSalaryMap.put(cc.AccountId,maxSalary);
+        }
+        else
+        {
+            maxSalaryMap.put(cc.AccountId,cc.Salary__c);
+        }
+        
+    	}
+        return maxSalaryMap;
+    }
+    
+    public static List<Account> updateAccWithMaxSalary(List<ID> accIdSet)
+    {	
+        List<Account> updateAcc=[SELECT ID FROM Account WHERE ID IN : accIdSet];
+        Map<ID,Decimal> maxSalaryMap=FindMaxSalary.getMaxSalaryMap(accIdSet);
+        List<Account> upAcc=new List<Account>();
+        for(Account ap : updateAcc)
+    {	
+        if(maxSalaryMap.ContainsKey(ap.Id))
+        {
+            ap.Max_Salary__c=maxSalaryMap.get(ap.Id);
+            upAcc.add(ap);
+        }
+        else
+        {
+             ap.Max_Salary__c=0;
+            upAcc.add(ap);
+        }
+    }
+    
+    update upAcc;
+        return upAcc;
+    }
+
+}
+,Nov 15, 9:48 AM,
+@isTest
+public  class inputData {
+    
+    public static List<Account> testMethodToGetInput(Integer nosOfAcc,Integer nosOfCon, Decimal conSalary)
+    {
+       List<Account> acc =new List<Account>();
+       List<Contact>con=new List<Contact>();
+       for(Integer i=0;i< nosOfAcc;i++)
+       {
+           Account ac=new Account();
+           ac.Name='TestAccount'+i;
+           acc.add(ac);
+       }
+        
+        insert acc;
+        for(Integer j=0;j< nosOfAcc;j++)
+        {	Account ac=acc[j];
+        	for(Integer i=0;i<nosOfCon;i++)
+        	{
+            	Contact cc =new Contact ();
+            	cc.LastName='TestAcontact'+i;
+            	cc.AccountId=ac.Id;
+            	cc.Salary__c=i*conSalary;
+            	con.add(cc);
+        	}
+        }
+        insert con;
+       // System.debug(con);
+        return acc;
+    }
+
+}
+,Nov 15, 9:50 AM,
+@isTest
+ Private class FindMaxSalaryTest {
+    
+    @isTest
+    static void testMaxSalary()
+    {
+      Account[] acc=  inputData.testMethodToGetInput(1,3,200);
+       List<Id>accIds = new List<Id>();
+       for(Account ac: acc)
+       {
+           accIds.add(ac.Id);
+       }
+        Test.startTest();
+         List<Account> tempAccount=FindMaxSalary.updateAccWithMaxSalary(accIds);
+        Test.stopTest();
+        
+        //Account temp=new Account();
+        //temp.id=acc[0].id;
+       // System.debug(tempAccount[0].Max_Salary__c);
+       System.assertEquals(400,tempAccount[0].Max_Salary__c);
+        
+        
+        
+    }  
+     @isTest
+    static void testMaxSalaryNoContacts()
+    {
+      Account[] acc=  inputData.testMethodToGetInput(1,0,0);
+       List<Id>accIds = new List<Id>();
+       for(Account ac: acc)
+       {
+           accIds.add(ac.Id);
+       }
+        Test.startTest();
+         List<Account> tempAccount=FindMaxSalary.updateAccWithMaxSalary(accIds);
+        Test.stopTest();
+        
+        //Account temp=new Account();
+        //temp.id=acc[0].id;
+       // System.debug(tempAccount[0].Max_Salary__c);
+       System.assertEquals(0,tempAccount[0].Max_Salary__c);
+        
+        
+        
+    }    
+    
+
+}
+,Nov 15, 9:50 AM,
+Shakti Rana
+,
+Nov 15, 11:53 AM
+,
+https://salesforce.stackexchange.com/questions/187123/how-to-implement-trigger-on-junction-object-to-update-field-on-contact
+How to implement Trigger on junction object to update field on contact
+How to implement Trigger on junction object to update field on contact
+salesforce.stackexchange.com
+,Nov 15, 11:53 AM,
+Map user in Junction Object
+,Nov 15, 11:53 AM,
+Shakti Rana
+,
+Nov 15, 12:04 PM
+,
+https://trailhead.salesforce.com/content/learn/projects/build-a-data-model-for-a-recruiting-app
+Build a Data Model for a Recruiting App
+Build a Data Model for a Recruiting App
+trailhead.salesforce.com
+,Nov 15, 12:04 PM,
+http://www.jitendrazaa.com/blog/salesforce/deep-drive-in-junction-object-create-many-to-many-relationship-in-salesforce/
+Deep dive into Junction object – Create many to many relationship in Salesforce
+Deep dive into Junction object – Create many to many relationship in Salesforce
+www.jitendrazaa.com
+,Nov 15, 12:05 PM,
+TUESDAY, NOV 16
+Shakti Rana
+,
+Nov 16, 12:23 PM
+,
+https://help.salesforce.com/s/articleView?id=sf.admin_transfer.htm&type=5
+,Nov 16, 12:23 PM,
+Shakti Rana
+,
+Nov 16, 12:30 PM
+,
+https://trailhead.salesforce.com/en/trailblazer-community/feed/0D54S00000A7VVnSAN
+how do I change all record owners | Salesforce Trailblazer Community
+how do I change all record owners | Salesforce Trailblazer Community
+trailhead.salesforce.com
+,Nov 16, 12:30 PM,
+WEDNESDAY, NOV 17
+Shakti Rana
+,
+Nov 17, 8:56 AM
+,
+How to get all records of a user and assign all to some other user in salesforce
+,Nov 17, 8:56 AM,
+Shakti Rana
+,
+Nov 17, 9:11 AM
+,
+Edited,
+farak ni pada kutch   | ANs  : Onject setting profiles pe tahi visible hota hai jb ye tick hota hai else no.
+image.png
+,Nov 17, 9:11 AM,Edited,
+Shakti Rana
+,
+Nov 17, 9:25 AM
+,
+Q How to make   user can see his and other member record
+,Nov 17, 9:25 AM,
+Shakti Rana
+,
+Nov 17, 3:20 PM
+,
+image.png
+,Nov 17, 3:20 PM,
+Shakti Rana
+,
+Nov 17, 3:37 PM
+,
+level child pe  owd setting readonly ho then role herarchy me edit hoga ?
+,Nov 17, 3:37 PM,
+THURSDAY, NOV 18
+Shakti Rana
+,
+Nov 18, 12:57 PM
+,
+System.debug(response.headers.get('content-type')); how to know   whether type is json or XML
+,Nov 18, 12:57 PM,
+logs are trimmed in system.debug
+,Nov 18, 12:58 PM,
+https://salesforce.stackexchange.com/questions/253854/developer-console-suddenly-truncating-system-debug-output
+Developer Console suddenly truncating System.Debug output
+Developer Console suddenly truncating System.Debug output
+salesforce.stackexchange.com
+,Nov 18, 1:00 PM,
+Shakti Rana
+,
+Nov 18, 6:02 PM
+,
+Http http = new Http();
+HttpRequest request = new HttpRequest();
+request.setEndpoint('https://reqres.in/api/users?page=1');
+request.setMethod('GET');
+HttpResponse response = http.send(request);
+//System.debug(response.getBody());
+Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+//System.debug(results.KeySet());
+List<Object> animals = (List<Object>) results.get('data');
+List<Object> lst = (List<Object>)results.get('data');
+System.debug(lst);
+for(Object pp :lst)
+{	Map<String,Object> mpParsed = (Map<String,Object>)pp;
+    System.debug(mpParsed.get('email'));
+}
+,Nov 18, 6:02 PM,
+Shakti Rana
+,
+Nov 18, 9:44 PM
+,
+https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Json.htm
+,Nov 18, 9:44 PM,
+image.png
+,Nov 18, 9:45 PM,
+FRIDAY, NOV 19
+Shakti Rana
+,
+Nov 19, 11:11 AM
+,
+HOW to TRAVERSELOG FILE
+,Nov 19, 11:11 AM,
+Http http = new Http();
+HttpRequest request = new HttpRequest();
+request.setEndpoint('https://reqres.in/api/users?page=1');
+request.setMethod('GET');
+HttpResponse response = http.send(request);
+// If the request is successful, parse the JSON response.
+
+System.debug('RESPONSE IS : '+ response);
+System.debug(response.getBody());
+Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+System.debug(results);
+List<Object> lstObject = (List<Object>)results.get('data');
+for(Object pp : lstObject)
+{
+    Map<String, Object> mm=(Map<String, Object>)pp;
+    System.debug(mm.get('id'));
+}
+,Nov 19, 11:11 AM,
+SUNDAY, NOV 21
+Shakti Rana
+,
+Nov 21, 5:40 PM
+,
+https://trailhead.salesforce.com/content/learn/modules/visualforce_fundamentals?trailmix_creator_id=ccleartest&trailmix_slug=visual-force-pages
+Visualforce Basics
+Visualforce Basics
+trailhead.salesforce.com
+,Nov 21, 5:40 PM,
+https://trailhead.salesforce.com/en/users/ccleartest/trailmixes/visual-force-pages
+Visual Force Pages Trailmix | Salesforce Trailhead
+Visual Force Pages Trailmix | Salesforce Trailhead
+trailhead.salesforce.com
+,Nov 21, 5:41 PM,
+Shakti Rana
+,
+Nov 21, 5:43 PM
+,
+https://trailhead.salesforce.com/en/users/fbatuta/trailmixes/lightning-web-components
+Visual Force & Lightning Web Components Trailmix | Salesforce Trailhead
+Visual Force & Lightning Web Components Trailmix | Salesforce Trailhead
+trailhead.salesforce.com
+,Nov 21, 5:43 PM,
+MONDAY, NOV 22
+Shakti Rana
+,
+Nov 22, 9:23 AM
+,
+image.png
+,Nov 22, 9:23 AM,
+how to comment in developer console
+,Nov 22, 9:23 AM,
+Shakti Rana
+,
+Nov 22, 12:34 PM
+,
+<apex:detail subject="{!Contact.LastName}" title="MyTitle" relatedList="false" />
+,Nov 22, 12:34 PM,
+not worked
+,Nov 22, 12:34 PM,
+Shakti Rana
+,
+Nov 22, 1:11 PM
+,
+reverse not work if side bar is active and show hrader is afalse result is not reflected
+image.png
+,Nov 22, 1:11 PM,
+Shakti Rana
+,
+Nov 22, 3:13 PM
+,
+tabOrderHint not working
+,Nov 22, 3:13 PM,
+Shakti Rana
+,
+Nov 22, 10:41 PM
+,
+public  with sharing class RestCalloutDemo {
+    public Integer id=3;
+      public string email{get;set;}
+	  public string firstName{get;set;}
+	  public string LastName{get;set;}
+    	public string avatar{get;set;}
+    public RestCalloutDemo()
+    {
+        Http http = new Http();
+		HttpRequest request = new HttpRequest();
+		request.setEndpoint('https://reqres.in/api/users?page=1');
+		request.setMethod('GET');
+		HttpResponse response = http.send(request);
+        if(response.getStatusCode() == 200) {
+            Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            List<Object> dataList = (List<Object>) results.get('data');
+           for(Object oo : dataList)
+           {
+               Map<String,Object> res = (Map<String, Object>)oo;
+               if(res.get('id')==id)
+               {	
+                email=String.valueOf(res.get('email'));
+                firstName=String.valueOf(res.get('first_name'));
+                LastName=String.valueOf(res.get('last_name'));
+                avatar=String.valueOf(res.get('avatar'));
+                   id=Integer.valueOf(res.get('id'));
+               }
+           }
+        
+        }
+        
+    }
+
+
+}
+,Nov 22, 10:41 PM,
+<apex:page controller="RestCalloutDemo">
+    
+    <apex:pageBlock title="Rest API Output">
+        <apex:pageBlockSection>
+            
+             <apex:outputText label="Email" value="{!email}"/>
+             <apex:outputText label="First Name" value="{!firstName}"/>
+             <apex:outputText label="Last Name" value="{!LastName}"/>
+            <apex:outputText label="Avatar URL" value="{!avatar}"/>
+        </apex:pageBlockSection>
+    
+    
+    
+    
+    
+    </apex:pageBlock>
+</apex:page>
+,Nov 22, 10:41 PM,
+TUESDAY, NOV 23
+Shakti Rana
+,
+Nov 23, 9:56 AM
+,
+2 files generated one sync other async  wsdl file
+image.png
+,Nov 23, 9:56 AM,
+Shakti Rana
+,
+Nov 23, 10:59 AM
+,
+https://blog.jeffdouglas.com/2010/04/02/visualforce-row-counter-for-iteration-components/
+Visualforce Row Counter for Iteration Components
+Visualforce Row Counter for Iteration Components
+blog.jeffdouglas.com
+,Nov 23, 10:59 AM,
+Shakti Rana
+,
+Nov 23, 1:15 PM
+,
+<apex:page controller="RestCalloutDemo">
+    
+    <apex:pageBlock title="Rest API Output">
+        <apex:pageBlockSection >
+            
+             <apex:outputText label="Email" value="{!email}"/>
+             <apex:outputText label="First Name" value="{!firstName}"/>
+             <apex:outputText label="Last Name" value="{!LastName}"/>
+            <apex:image id="theImage" value="{!avatar}" width="220" height="220" alt="{!FirstName}"/>
+            
+        </apex:pageBlockSection>
+        <apex:pageBlock title="In Table view">
+        <apex:pageBlockSection title="Section Name">
+            
+        <tr>
+			<th>Id</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Avatar</th>
+
+        </tr>
+		<apex:repeat var="ds" value="{!lisMap}">
+       
+            
+           <tr>
+            
+             	 <td >{!ds['id']}</td>
+               <td>{!ds['email']}</td>
+               <td>{!ds['first_name']}</td>
+               <td>{!ds['last_name']}</td>
+               <td style="text-align: end;"><apex:image id="theImage" value="{!ds['avatar']}" width="50" height="50" alt="{!FirstName}" style=" border : 3px solid red" /></td>
+            
+            </tr>
+			
+           
+
+            
+
+        
+            
+           
+
+       
+
+        </apex:repeat> 
+     
+            
+            </apex:pageBlockSection>
+        
+        
+        </apex:pageBlock>
+    
+    
+    </apex:pageBlock>
+</apex:page>
+,Nov 23, 1:15 PM,
+Shakti Rana
+,
+Nov 23, 3:53 PM
+,
+<apex:dataTable value="{!Account.Contacts}" var="con">
+        <apex:column value="{!con.LastName}"/>
+        </apex:dataTable>
+,Nov 23, 3:53 PM,
+WEDNESDAY, NOV 24
+Shakti Rana
+,
+Nov 24, 5:12 PM
+,
+curl https://grazittiinteractive-1b2-dev-ed.my.salesforce.com/services/apexrest/Cases/myCase/5005g00000IFSkkAAH -H "Authorization: Bearer 00D5g00000Bja5b!AREAQIt88Kof7xcQrQ8ea0eoJnzGQleRlvwtFIJN5zy7JPDTqbzkbA8HD4i5hcXf1Cf.TFguLWEOVZb6C7fIE6k7mnoBZTV7" -H "X-PrettyPrint:1"
+,Nov 24, 5:12 PM,
+Shakti Rana
+,
+Nov 24, 5:44 PM
+,
+how curl lmow how to perform which kind of rquest
+,Nov 24, 5:44 PM,
+THURSDAY, NOV 25
+Shakti Rana
+,
+Nov 25, 8:40 AM
+,
+http://amitsalesforce.blogspot.com/2017/06/test-salesforce-api-by-postman-rest.html
+Test Salesforce API by Postman Rest Client | Postman and Salesforce | Calling APEX Rest service using Postman| OAuth 2.0
+amitsalesforce.blogspot.com
+,Nov 25, 8:40 AM,
+Shakti Rana
+,
+Nov 25, 8:53 AM
+,
+https://grazittiinteractive-1b2-dev-ed.my.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG9fe4g9fhX0E6Z2ZIDnHfdFDfR_3cNGec7lFe1AscgIS.Mx2ru2G9rKtQm_0rNe4nORolVwOENohHug8Uv&client_secret=0A2CA23D5C6E2F237B068DB6D27CA3B574CA33E4FE97057784826BBD7ADD2A48
+&username=shakti.rana@grazitti.com&password=Shallu@123aXRHUOx3sFspOIE9KLOqokTR
+,Nov 25, 8:53 AM,
+call from  Postman to salesforce
+,Nov 25, 8:53 AM,
+"access_token": "00D5g00000Bja5b!AREAQB83KJegyKP9mGiX7qG8PmZ.UOT0YCHxYuW4t8hO8snh0R6bqBCVZlfgHXM0dHZieVeK6Fs2_uaWA14TQM23tV.WdLIl",
+    "instance_url": "https://grazittiinteractive-1b2-dev-ed.my.salesforce.com",
+    "id": "https://login.salesforce.com/id/00D5g00000Bja5bEAB/0055g00000Ca4ocAAB",
+    "token_type": "Bearer",
+    "issued_at": "1637810585006",
+    "signature": "UnbLulhxJEF2i9j9a3/SlXByVORXAOGXz/UGCLBe7EA="
+}
+,Nov 25, 8:53 AM,
+ye out[put aya
+,Nov 25, 8:53 AM,
+Shakti Rana
+,
+Nov 25, 10:18 AM
+,
+https://grazittiinteractive-1b2-dev-ed.my.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG9fe4g9fhX0E6Z2ZIDnHfdFDfR_3cNGec7lFe1AscgIS.Mx2ru2G9rKtQm_0rNe4nORolVwOENohHug8Uv&client_secret=0A2CA23D5C6E2F237B068DB6D27CA3B574CA33E4FE97057784826BBD7ADD2A48
+&username=shakti.rana@grazitti.com&password=Shallu@123aXRHUOx3sFspOIE9KLOqokTR
+,Nov 25, 10:18 AM,
+Shakti Rana
+,
+Nov 25, 12:13 PM
+,
+https://intellipaat.com/blog/tutorial/salesforce-tutorial/wrapper-class-in-salesforce/
+Wrapper Class in Salesforce - Salesforce Tutorial - Intellipaat
+Wrapper Class in Salesforce - Salesforce Tutorial - Intellipaat
+intellipaat.com
+,Nov 25, 12:13 PM,
+FRIDAY, NOV 26
+Shakti Rana
+,
+Nov 26, 9:04 AM
+,
+https://salesforce.stackexchange.com/questions/37333/how-to-run-a-scheduled-job-every-15-minutes
+How to run a scheduled job every 15 minutes?
+How to run a scheduled job every 15 minutes?
+salesforce.stackexchange.com
+,Nov 26, 9:04 AM,
+Shakti Rana
+,
+Nov 26, 9:08 AM
+,
+https://howtodoitinsalesforce.blogspot.com/2016/12/run-schedule-class-in-every-5-mins-in.html
+How To Do It In Salesforce
+howtodoitinsalesforce.blogspot.com
+,Nov 26, 9:08 AM,
+Shakti Rana
+,
+Nov 26, 9:52 AM
+,
+image.png
+,Nov 26, 9:52 AM,
+image.png
+,Nov 26, 9:53 AM,
+image.png
+,Nov 26, 9:54 AM,
+Shakti Rana
+,
+Nov 26, 10:38 AM
+,
+https://developer.salesforce.com/forums/?id=906F0000000BancIAC
+DeveloperForce
+DeveloperForce
+developer.salesforce.com
+,Nov 26, 10:38 AM,
+Shakti Rana
+,
+Nov 26, 10:46 AM
+,
+https://www.greytrix.com/blogs/salesforce/2021/09/22/how-to-use-email-template-in-apex-code/
+How to Use Email Template in Apex Code - Salesforce.com-Tips and Tricks by Greytrix
+How to Use Email Template in Apex Code - Salesforce.com-Tips and Tricks by Greytrix
+www.greytrix.com
+,Nov 26, 10:46 AM,
+Shakti Rana
+,
+Nov 26, 11:27 AM
+,
+https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_messaging_emailTemplate.htmhttps://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_email_templates_intro.htm
+,Nov 26, 11:27 AM,
+Shakti Rana
+,
+Nov 26, 11:54 AM
+,
+https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_email_templates_with_apex.htm
+,Nov 26, 11:54 AM,
+Shakti Rana
+,
+Nov 26, 12:21 PM
+,
+https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_compref_dataTable.htm
+,Nov 26, 12:21 PM,
+Shakti Rana
+,
+Nov 26, 12:34 PM
+,
+https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_email_templates_with_apex.htm
+,Nov 26, 12:34 PM,
+imp regarding sending an email
+,Nov 26, 12:34 PM,
+Shakti Rana
+,
+Nov 26, 5:10 PM
+,
+Select ID , Name from EmailTemplate
+,Nov 26, 5:10 PM,
+Shakti Rana
+,
+Nov 26, 10:25 PM
+,
+String sch1 = '0 0 * * * ?';
+String jobID1 = System.schedule('Remind Opp Owners1', sch1, new MyScheduleJob());
+String sch2 = '0 10 * * * ?';
+String jobID2 = System.schedule('Remind Opp Owners2', sch2, new MyScheduleJob());
+String sch3 = '0 20 * * * ?';
+String jobID3 = System.schedule('Remind Opp Owners3', sch3, new MyScheduleJob());
+String sch4 = '0 30 * * * ?';
+String jobID4 = System.schedule('Remind Opp Owners4', sch4, new MyScheduleJob());
+String sch5 = '0 40 * * * ?';
+String jobID5 = System.schedule('Remind Opp Owners5', sch5, new MyScheduleJob());
+String sch6 = '0 50 * * * ?';
+String jobID6 = System.schedule('Remind Opp Owners6', sch6, new MyScheduleJob());
+,Nov 26, 10:25 PM,
+// schediule job after every 10 min
+,Nov 26, 10:26 PM,
+public class DemoScheduleMain {
+    
+    public List<Account> oppList{get;set;}
+    public List<Account> oppListMain{get;set;}
+    public List<Account> reqAcc=new List<Account>();
+    
+    public  List<Account>getexecute1() 
+    {
+       oppList = [select Id, name, (Select ID , LastName from Contacts) from Account where SystemModstamp > :Datetime.now().addMinutes(-10)]; 
+         
+       for(Account ac : oppList)
+       {	
+           if(((ac.contacts).size()) >1)
+           {	
+               reqAcc.add(ac);
+            
+           }
+       }
+         System.debug('In Controller'+reqAcc);
+         //sendEmail();
+       	 oppListMain= reqAcc;
+        System.debug('Before'+reqAcc);
+         return oppListMain;
+        }
+    public void ismailSend()
+    {
+       
+       // System.debug('Send email');    
+               // System.debug('After'+reqAcc);
+       
+        if((reqAcc.size())>1)
+        { sendEmail();}
+    }
+    
+    public void sendEmail()
+    {	System.debug('Sending Email');
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+		mail.setTargetObjectId('0055g00000Ca4ocAAB');
+		mail.setTemplateId('00X5g000000RIIkEAO');
+      	mail.setSaveAsActivity(false);
+		Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+    
+    }
+     
+
+}
+,Nov 26, 10:26 PM,
+<apex:component controller="DemoScheduleMain" access="global">
+    <p>
+        Hi Team,
+    </p>
+    <p>
+        Below Accounts have been admitted to database, Which having more than 1 contacts.
+    </p>
+	<apex:dataTable value="{!execute1}" var="acc">
+        
+        <apex:column >
+			<apex:facet name="header"> Account Id </apex:facet>
+			{!acc.Id}
+		</apex:column>
+        <apex:column >
+			<apex:facet name="header">  Name </apex:facet>
+			{!acc.Name}
+		</apex:column>
+        <apex:column >
+			<apex:facet name="header">   Contacts Id </apex:facet>
+			{!acc.contacts}
+		</apex:column>
+		
+	</apex:dataTable>
+</apex:component>
+,Nov 26, 10:26 PM,
+global  class MyScheduleJob implements Schedulable 
+{
+   
+	global void execute(SchedulableContext ctx) {
+       
+      	DemoScheduleMain ds=new DemoScheduleMain();
+       	ds.getexecute1();
+        ds.ismailSend();
+        
+        System.debug('Working');
+       
+    }
+    
+}
+,Nov 26, 10:27 PM,
+TUESDAY, NOV 30
+Shakti Rana
+,
+Nov 30, 8:47 AM
+,
+https://www.youtube.com/playlist?list=PLSWzWO4OqYAoXiLpNOYcctXdoAwcxJynH
+Lightning Web Component Series
+Lightning Web Component Series
+www.youtube.com
+,Nov 30, 8:47 AM,
+https://www.youtube.com/playlist?list=PLdYQMTciVWO9dJAafGxS1HuZy4wx6AxAW
+Salesforce Lightning Web Components
+Salesforce Lightning Web Components
+www.youtube.com
+,Nov 30, 8:48 AM,
+Shakti Rana
+,
+Nov 30, 9:27 AM
+,
+https://help.salesforce.com/s/articleView?id=sf.flow_prep_bestpractices.htm&type=5
+image.png
+,Nov 30, 9:27 AM,
+Shakti Rana
+,
+Nov 30, 1:48 PM
+,
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
+this - JavaScript | MDN
+this - JavaScript | MDN
+developer.mozilla.org
+,Nov 30, 1:48 PM,
+WEDNESDAY, DEC 1
+Shakti Rana
+,
+Dec 1, 2:03 PM
+,
+https://www.lightningdesignsystem.com/utilities/padding/
+,Dec 1, 2:03 PM,
+Shakti Rana
+,
+Dec 1, 6:59 PM
+,
+https://niksdeveloper.com/salesforce/override-css-in-lwc-for-standard-components/#:~:text=Override%20CSS%20in%20LWC%20using%20External%20Stylesheet&text=Right%2Dclick%20on%20the%20title,Once%20it%20is%20done.
+Override CSS in LWC for Standard Components
+Override CSS in LWC for Standard Components
+niksdeveloper.com
+,Dec 1, 6:59 PM,
+Shakti Rana
+,
+Dec 1, 8:51 PM
+,
+TO OVERCOME CUSTOM CSS
+,Dec 1, 8:51 PM,
+THURSDAY, DEC 2
+Shakti Rana
+,
+Dec 2, 12:05 PM
+,
+https://jayakrishnasfdc.wordpress.com/2021/01/24/integration-between-salesforce-orgs-connecting-2-salesforce-orgs-using-named-credentials/
+Integration between Salesforce Orgs/Connecting 2 salesforce Orgs Using Named Credentials.
+Integration between Salesforce Orgs/Connecting 2 salesforce Orgs Using Named Credentials.
+jayakrishnasfdc.wordpress.com
+,Dec 2, 12:05 PM,
+Shakti Rana
+,
+Dec 2, 12:11 PM
+,
+https://jayakrishnasfdc.wordpress.com/2020/03/14/remote-site-settings-named-credentials-in-salesforce/
+Remote Site Settings & Named Credentials in Salesforce
+Remote Site Settings & Named Credentials in Salesforce
+jayakrishnasfdc.wordpress.com
+,Dec 2, 12:11 PM,
+Shakti Rana
+,
+Dec 2, 12:50 PM
+,
+https://www.jitendrazaa.com/blog/salesforce/login-to-salesforce-from-salesforce-using-authentication-provider/
+Login to Salesforce from Salesforce using Authentication Provider
+Login to Salesforce from Salesforce using Authentication Provider
+www.jitendrazaa.com
+,Dec 2, 12:50 PM,
+Shakti Rana
+,
+Dec 2, 1:58 PM
+,
+HttpRequest req = new HttpRequest();
+String query='select+Id,Name+from+User';
+req.setEndpoint('callout:DemoNC/services/data/v53.0/query/?q='+query);
+req.setMethod('GET');
+Http http = new Http();
+HTTPResponse resp = http.send(req);
+system.debug('Body:'+resp.getBody());
+,Dec 2, 1:58 PM,
+Shakti Rana
+,
+Dec 2, 2:06 PM
+,
+https://niksdeveloper.com/salesforce/named-credentials-per-user-with-oauth-2-0/
+Named Credentials PER USER with OAuth 2.0
+Named Credentials PER USER with OAuth 2.0
+niksdeveloper.com
+,Dec 2, 2:06 PM,
+Shakti Rana
+,
+Dec 2, 4:09 PM
+,
+HttpRequest req = new HttpRequest();
+String query='select+Id,Name+from+User';
+req.setEndpoint('callout:demoPerUserTesting/services/data/v53.0/query/?q='+query);
+req.setMethod('GET');
+Http http = new Http();
+HTTPResponse resp = http.send(req);
+system.debug('Body:'+resp.getBody());
+,Dec 2, 4:09 PM,
+Shakti Rana
+,
+Dec 2, 4:27 PM
+,
+Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('callout:demoPerUserTesting/services/apexrest/AccountService/');
+        request.setMethod('POST');
+        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+        request.setBody('{"name":"mighty moose"}');
+        HttpResponse response = http.send(request);
+        // Parse the JSON response
+        if(response.getStatusCode() != 201) {
+            System.debug('The status code returned was not expected: ' +
+                response.getStatusCode() + ' ' + response.getStatus());
+        } else {
+            System.debug(response.getBody());
+        }
+,Dec 2, 4:27 PM,
+Shakti Rana
+,
+Dec 2, 6:02 PM
+,
+image.png
+,Dec 2, 6:02 PM,
+FRIDAY, DEC 3
+Shakti Rana
+,
+Dec 3, 10:13 AM
+,
+https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.get_started_introduction
+,Dec 3, 10:13 AM,
+LWC DOCS
+,Dec 3, 10:13 AM,
+MONDAY, DEC 6
+Shakti Rana
+,
+Mon 1:58 PM
+,
+https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reference_lifecycle_hooks
+,Mon 1:58 PM,
+TUESDAY, DEC 7
+Shakti Rana
+,
+Tue 11:35 AM
+,
+child 3 me error hai
+,Tue 11:35 AM,
+Shakti Rana
+,
+Tue 1:24 PM
+,
+http://amitsalesforce.blogspot.com/2019/07/events-in-lightning-web-components-lwc.html
+Events in Lightning web components (LWC) | Communicate with Events
+amitsalesforce.blogspot.com
+,Tue 1:24 PM,
+Shakti Rana
+,
+Tue 1:39 PM
+,
+https://www.sfdcblogs.com/post/how-to-fetch-inputs-in-lightning-web-components
+How to fetch Inputs in Lightning Web Components
+How to fetch Inputs in Lightning Web Components
+www.sfdcblogs.com
+,Tue 1:39 PM,
+Shakti Rana
+,
+Tue 4:38 PM
+,
+https://newstechnologystuff.com/2021/05/16/styling-hooks-for-lightning-web-components/
+Styling Hooks for Lightning Web Components - Salesforce News Technology Stuff
+Styling Hooks for Lightning Web Components - Salesforce News Technology Stuff
+newstechnologystuff.com
+,Tue 4:38 PM,
+Shakti Rana
+,
+Tue 5:32 PM
+,
+https://www.youtube.com/watch?v=ENRVbA3bqzY
+YouTube videoPlay video
+YouTube video
+,Tue 5:32 PM,
+Shakti Rana
+,
+Tue 5:53 PM
+,
+https://www.youtube.com/watch?v=rruQnFAuRsw
+YouTube videoPlay video
+YouTube video
+,Tue 5:53 PM,
+WEDNESDAY, DEC 8
+Shakti Rana
+,
+Wed 10:35 AM
+,
+unable to change width of card
+,Wed 10:35 AM,
+Shakti Rana
+,
+Wed 1:07 PM
+,
+https://salesforcecodex.com/salesforce/adding-table-row-dynamically-in-lightning-web-component/
+SalesforceCodex
+SalesforceCodex
+salesforcecodex.com
+,Wed 1:07 PM,
+Shakti Rana
+,
+Wed 1:27 PM
+,
+https://salesforce.stackexchange.com/questions/329545/how-to-add-sobject-records-to-lwc-data-table-based-on-input-from-user
+How to add SObject records to lwc data table based on input from user
+How to add SObject records to lwc data table based on input from user
+salesforce.stackexchange.com
+,Wed 1:27 PM,
+Shakti Rana
+,
+Wed 6:17 PM
+,
+delete a project bhi ni chalta
+,Wed 6:17 PM,
+THURSDAY, DEC 9
+Shakti Rana
+,
+Thu 10:12 AM
+,
+why to enable dev hub
+,Thu 10:12 AM,
+Shakti Rana
+,
+Thu 10:55 AM
+,
+https://webcomponents.dev/create/lwc
+WebComponents.dev
+WebComponents.dev
+webcomponents.dev
+,Thu 10:55 AM,
+FRIDAY, DEC 10
+Shakti Rana
+,
+Fri 11:25 AM
+,
+https://github.com/karkranikhil/salesforcetroop-code/tree/master/force-app/main/default/lwc
+salesforcetroop-code
+salesforcetroop-code
+github.com
+,Fri 11:25 AM,
+Shakti Rana
+,
+Fri 5:07 PM
+,
+image.png
+,Fri 5:07 PM,
+in pubsub project
+,Fri 5:07 PM,
+Jump to bottom
+History is on
